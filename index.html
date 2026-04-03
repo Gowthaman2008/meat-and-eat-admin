@@ -435,9 +435,6 @@
     animation:modal-pop 0.3s cubic-bezier(.34,1.56,.64,1);
     position:relative;
   }
-  @media (max-width:480px) {
-    .modal { padding:24px 16px; border-radius:20px 20px 0 0; position:absolute; bottom:0; width:100%; margin-bottom:0; max-height:85vh; }
-  }
   @keyframes modal-pop { from{opacity:0;transform:scale(0.92) translateY(20px);} to{opacity:1;transform:scale(1) translateY(0);} }
   .modal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; position:sticky; top:0; background:var(--card); z-index:5; padding-bottom:10px; }
   .modal-header h3 { font-family:'Fredoka One',cursive; font-size:1.3rem; color:var(--text); }
@@ -557,25 +554,122 @@
   /* ─── RESPONSIVE ─── */
   .hamburger-toggle {
     display:none; background:none; border:none; cursor:pointer;
-    color:var(--text); font-size:1.3rem; padding:4px;
+    color:var(--text); font-size:1.4rem; padding:6px 8px;
+    border-radius:8px; transition:background 0.2s; line-height:1;
   }
+  .hamburger-toggle:hover { background:rgba(255,255,255,0.08); }
+
   @media (max-width:768px) {
-    .sidebar { transform:translateX(-100%); }
-    .sidebar.open { transform:translateX(0); }
-    .main { margin-left:0; }
-    .hamburger-toggle { display:block; }
-    .charts-row { grid-template-columns:1fr; }
-    .settings-grid { grid-template-columns:1fr; }
-    .form-row { grid-template-columns:1fr; }
-    .sidebar-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:99; display:none; }
+    /* ── Sidebar ── */
+    .sidebar { transform:translateX(-100%); width:260px; }
+    .sidebar.open { transform:translateX(0); box-shadow:8px 0 40px rgba(0,0,0,0.6); }
+    .sidebar-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:99; display:none; backdrop-filter:blur(2px); }
     .sidebar-overlay.open { display:block; }
-    .topbar { padding: 12px 16px; }
-    .topbar-title { font-size: 1.1rem; }
-    .page { padding: 20px 16px; }
-    .stat-card { padding: 18px; }
-    .stat-card .s-val { font-size: 2rem; }
-    .toggle-row { padding: 16px 0; }
-    .toggle-info .t-label { font-size: 0.85rem; }
+
+    /* ── Layout ── */
+    .main { margin-left:0; width:100%; }
+    .hamburger-toggle { display:flex; align-items:center; justify-content:center; }
+
+    /* ── Topbar ── */
+    .topbar { padding:10px 14px; gap:10px; }
+    .topbar-title { font-size:1.05rem; }
+    .admin-badge { font-size:0.68rem; padding:4px 9px; letter-spacing:0.5px; }
+    .admin-avatar { width:30px; height:30px; font-size:0.85rem; }
+    .topbar-right { gap:10px; }
+
+    /* ── Pages ── */
+    .page { padding:16px 12px 24px; }
+
+    /* ── Stats Grid ── */
+    .stats-grid { grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px; }
+    .stat-card { padding:14px 12px; border-radius:12px; }
+    .stat-card .s-icon { font-size:1.4rem; margin-bottom:8px; }
+    .stat-card .s-val { font-size:1.8rem; }
+    .stat-card .s-label { font-size:0.7rem; }
+    .stat-card .s-change { font-size:0.65rem; margin-top:6px; }
+
+    /* ── Charts Row ── */
+    .charts-row { grid-template-columns:1fr; gap:14px; margin-bottom:20px; }
+    .chart-card { padding:16px 14px; }
+    .chart-card h3 { font-size:1rem; margin-bottom:14px; }
+    .chart-header { flex-wrap:wrap; gap:10px; margin-bottom:16px; padding-bottom:10px; }
+    .chart-controls { gap:5px; flex-wrap:wrap; }
+    .chart-btn { padding:5px 9px; font-size:0.68rem; }
+    .bar-chart { height:110px; gap:6px; }
+    .bar-col { min-width:30px; }
+    .bar-label { font-size:0.6rem; }
+    .bar-val { font-size:0.62rem; }
+    .donut-wrap { gap:14px; }
+
+    /* ── Recent Orders Table ── */
+    .recent-orders { padding:16px 12px; border-radius:12px; }
+    .orders-table { min-width:540px; }
+    .orders-table th { padding:8px 10px; font-size:0.65rem; }
+    .orders-table td { padding:10px 10px; font-size:0.82rem; }
+
+    /* ── Menu Page ── */
+    .page-header { margin-bottom:18px; gap:10px; }
+    .page-header h2 { font-size:1.5rem; }
+    .page-header > div { gap:8px; }
+    .btn-add { padding:9px 16px; font-size:0.88rem; }
+    .btn-manage-cats { padding:7px 12px; font-size:0.8rem; }
+    .cat-filter { gap:7px; margin-bottom:16px; }
+    .cat-btn { font-size:0.8rem; padding:6px 14px; }
+    .menu-admin-grid { grid-template-columns:1fr 1fr; gap:12px; }
+    .mac-body { padding:12px; }
+    .mac-name { font-size:0.95rem; }
+    .mac-desc { font-size:0.72rem; margin-bottom:10px; }
+    .mac-price { font-size:1.25rem; }
+    .mac-btn { width:32px; height:32px; font-size:0.95rem; }
+    .mac-cat-badge { font-size:0.58rem; padding:2px 8px; }
+
+    /* ── Settings ── */
+    .settings-grid { grid-template-columns:1fr; gap:14px; }
+    .settings-card { padding:18px 16px; border-radius:12px; }
+    .settings-card h3 { font-size:1rem; margin-bottom:14px; }
+    .toggle-row { padding:12px 0; }
+    .toggle-info .t-label { font-size:0.85rem; }
+    .toggle-info .t-sub { font-size:0.7rem; }
+
+    /* ── Forms ── */
+    .form-row { grid-template-columns:1fr; gap:12px; }
+    .form-group { margin-bottom:14px; }
+    .form-group label { font-size:0.7rem; }
+    .form-group input, .form-group select, .form-group textarea { padding:10px 12px; font-size:0.9rem; }
+
+    /* ── Modal ── */
+    .modal { padding:20px 14px; border-radius:20px 20px 0 0; position:absolute; bottom:0; width:100%; max-height:88vh; }
+    .modal-header { margin-bottom:16px; }
+    .modal-header h3 { font-size:1.15rem; }
+    .modal-footer { gap:10px; flex-wrap:wrap; }
+    .btn-cancel, .btn-save { padding:10px 20px; font-size:0.88rem; }
+
+    /* ── Toast ── */
+    .toast { bottom:16px; right:12px; left:12px; min-width:unset; border-radius:10px; padding:12px 16px; }
+
+    /* ── Confirm Modal ── */
+    .confirm-modal { padding:22px 18px; }
+
+    /* ── Category Items ── */
+    .cat-item { padding:10px 12px; }
+    .cat-icon-box { width:30px; height:30px; font-size:1rem; }
+    .cat-name-lbl { font-size:0.88rem; }
+  }
+
+  /* Extra small phones */
+  @media (max-width:400px) {
+    .stats-grid { grid-template-columns:1fr 1fr; gap:10px; }
+    .stat-card { padding:12px 10px; }
+    .stat-card .s-val { font-size:1.55rem; }
+    .stat-card .s-label { font-size:0.62rem; }
+    .menu-admin-grid { grid-template-columns:1fr; }
+    .page { padding:14px 10px 20px; }
+    .topbar { padding:9px 10px; }
+    .topbar-title { font-size:0.95rem; }
+    .admin-badge { display:none; }
+    .page-header h2 { font-size:1.3rem; }
+    .chart-controls { gap:4px; }
+    .chart-btn { padding:4px 7px; font-size:0.63rem; }
   }
 
   /* ─── EMPTY STATE ─── */
@@ -606,7 +700,25 @@
   .btn-cat-del { background:rgba(232,24,26,0.15); color:var(--red); }
   .btn-cat-del:hover { background:rgba(232,24,26,0.3); }
 
-  /* ─── CREDITS ─── */
+  /* ─── CONTACT CARDS (mobile) ─── */
+  .contact-cards { display:none; flex-direction:column; gap:12px; margin-top:4px; }
+  .contact-card {
+    background:rgba(255,255,255,0.03); border:1px solid var(--border);
+    border-radius:12px; padding:14px 14px 12px; position:relative;
+  }
+  .cc-header { display:flex; align-items:flex-start; justify-content:space-between; gap:8px; margin-bottom:10px; }
+  .cc-name { font-weight:800; font-size:0.95rem; color:var(--text); }
+  .cc-city { font-size:0.72rem; color:var(--muted); margin-top:2px; }
+  .cc-row { display:flex; align-items:flex-start; gap:8px; margin-bottom:6px; font-size:0.82rem; color:var(--muted); }
+  .cc-row .cc-lbl { font-size:0.68rem; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:rgba(255,255,255,0.3); min-width:52px; margin-top:1px; }
+  .cc-row .cc-val { color:var(--text); flex:1; line-height:1.45; word-break:break-word; }
+  .cc-footer { display:flex; align-items:center; justify-content:space-between; margin-top:12px; padding-top:10px; border-top:1px solid var(--border); gap:8px; }
+
+  @media (max-width:768px) {
+    .table-wrapper { display:none; }
+    .contact-cards { display:flex; }
+    .recent-orders { padding:14px 12px; }
+  }
   .admin-credits {
     text-align:center; margin-top:24px; padding:10px;
     font-size:0.8rem; color:rgba(255,255,255,0.25);
@@ -779,6 +891,8 @@
             </tbody>
           </table>
         </div>
+        <!-- Mobile card view -->
+        <div class="contact-cards" id="contactCards"></div>
       </div>
     </div>
 
@@ -1087,9 +1201,11 @@ function buildWeeklyChart() {
 
 function renderOrdersTable(data) {
   const tbody = document.getElementById('ordersTable');
+  const cards = document.getElementById('contactCards');
   if (!tbody) return;
   if (!data || !data.length) {
     tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No contact submissions yet.</td></tr>';
+    if (cards) cards.innerHTML = '<div class="empty-state" style="padding:30px 10px;"><div class="e-icon">📭</div><p>No contact submissions yet.</p></div>';
     return;
   }
   tbody.innerHTML = data.map(o => {
@@ -1126,6 +1242,40 @@ function renderOrdersTable(data) {
       </tr>
     `;
   }).join('');
+
+  // Mobile cards
+  if (cards) {
+    cards.innerHTML = data.map(o => {
+      const s = o.status || 'pending';
+      const sText = s.charAt(0).toUpperCase() + s.slice(1);
+      const sIcon = s==='pending'?'⏳':(s==='contacted'?'✅':'❌');
+      return `
+        <div class="contact-card">
+          <div class="cc-header">
+            <div>
+              <div class="cc-name">${o.name}</div>
+              <div class="cc-city">${o.city || ''}</div>
+            </div>
+            <span class="badge-status ${s}">${sIcon} ${sText}</span>
+          </div>
+          <div class="cc-row"><span class="cc-lbl">Email</span><span class="cc-val">${o.email || '-'}</span></div>
+          <div class="cc-row"><span class="cc-lbl">Phone</span><span class="cc-val">${o.phone || '-'}</span></div>
+          <div class="cc-row"><span class="cc-lbl">Message</span><span class="cc-val">${o.message || '-'}</span></div>
+          <div class="cc-row"><span class="cc-lbl">Date</span><span class="cc-val">${o.date || '-'}</span></div>
+          <div class="cc-footer">
+            <div class="status-wrapper">
+              <button class="status-select" onclick="toggleStatusMenu('mob-${o.id}', event)">✏️ Update Status</button>
+              <div class="status-popover" id="pop-mob-${o.id}">
+                <div class="status-opt" onclick="updateAndCloseStatus('${o.id}', 'pending')"><div class="opt-dot" style="background:#f5c518"></div> Pending</div>
+                <div class="status-opt" onclick="updateAndCloseStatus('${o.id}', 'contacted')"><div class="opt-dot" style="background:#22c55e"></div> Contacted</div>
+                <div class="status-opt" onclick="updateAndCloseStatus('${o.id}', 'rejected')"><div class="opt-dot" style="background:#ff4757"></div> Rejected</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
 }
 
 /* ══════════════════════════
