@@ -240,14 +240,48 @@
   .s-change.up { background:rgba(34,197,94,0.12); color:var(--green); }
   .s-change.down { background:rgba(239,68,68,0.12); color:#f87171; }
 
+  .stat-card-pulse {
+    position:absolute; top:12px; right:12px; width:10px; height:10px;
+    background:#2ecc71; border-radius:50%;
+    box-shadow:0 0 0 rgba(46,204,113,0.4);
+    animation:pulse-green 2s infinite;
+    z-index:2;
+  }
+  @keyframes pulse-green {
+    0% { transform:scale(0.95); box-shadow:0 0 0 0 rgba(46,204,113,0.7); }
+    70% { transform:scale(1.1); box-shadow:0 0 0 10px rgba(46,204,113,0); }
+    100% { transform:scale(0.95); box-shadow:0 0 0 0 rgba(46,204,113,0); }
+  }
+
   .charts-row { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:32px; }
   .chart-card {
     background:var(--card); border:1px solid var(--border); border-radius:16px; padding:24px;
   }
   .chart-card h3 { font-family:'Fredoka One',cursive; font-size:1.1rem; color:var(--text); margin-bottom:20px; }
 
+  .chart-header {
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:24px; padding-bottom:12px; border-bottom:1px solid var(--border);
+  }
+  .chart-header h3 { margin-bottom:0; }
+  .chart-controls { display:flex; gap:8px; }
+  .chart-btn {
+    padding:6px 12px; border-radius:8px; border:1px solid var(--border);
+    background:transparent; color:var(--muted); cursor:pointer;
+    font-size:0.75rem; font-weight:700; transition:all 0.2s;
+  }
+  .chart-btn:hover { border-color:var(--red); color:var(--red); }
+  .chart-btn.active { background:var(--red); border-color:var(--red); color:#fff; }
+
+  .chart-sub-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; }
+  .chart-range-text {
+    font-size:0.85rem; color:var(--muted); font-weight:600;
+    background:rgba(255,255,255,0.05); padding:4px 12px; border-radius:20px;
+    border:1px solid var(--border);
+  }
+
   .bar-chart { display:flex; align-items:flex-end; gap:10px; height:140px; }
-  .bar-col { flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; }
+  .bar-col { flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; min-width:45px; }
   .bar {
     width:100%; border-radius:6px 6px 0 0;
     background:linear-gradient(to top,var(--red),#ff5555);
@@ -270,13 +304,49 @@
   .orders-table th { font-size:0.7rem; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); font-weight:800; padding:10px 14px; text-align:left; border-bottom:1px solid var(--border); }
   .orders-table td { padding:13px 14px; font-size:0.88rem; border-bottom:1px solid rgba(255,255,255,0.03); }
   .orders-table tr:last-child td { border-bottom:none; }
-  .orders-table tr:hover td { background:rgba(255,255,255,0.02); }
   .badge-status {
-    font-size:0.7rem; font-weight:800; padding:3px 10px; border-radius:20px; letter-spacing:0.5px;
+    font-size:0.7rem; font-weight:800; padding:4px 12px; border-radius:30px; letter-spacing:0.5px;
+    display:inline-flex; align-items:center; gap:5px; cursor:pointer; transition:all 0.2s;
+    box-shadow:0 2px 8px rgba(0,0,0,0.1); border:1px solid transparent;
   }
-  .badge-status.done { background:rgba(34,197,94,0.12); color:var(--green); }
-  .badge-status.pending { background:rgba(245,197,24,0.12); color:var(--yellow); }
-  .badge-status.prep { background:rgba(59,130,246,0.12); color:var(--blue); }
+  .badge-status:hover { transform:translateY(-1px); box-shadow:0 4px 12px rgba(0,0,0,0.2); border-color:rgba(255,255,255,0.1); }
+  
+  .badge-status.pending { background:rgba(245,197,24,0.12); color:#f5c518; }
+  .badge-status.contacted { background:rgba(34,197,94,0.12); color:#22c55e; }
+  .badge-status.rejected { background:rgba(232,24,26,0.12); color:#ff4757; }
+  
+  .status-wrapper { position:relative; }
+  .status-popover {
+    position:absolute; top:calc(100% + 8px); right:0; z-index:100;
+    background:rgba(28,20,20,0.95); border:1px solid var(--border);
+    border-radius:12px; padding:6px; min-width:140px;
+    box-shadow:0 10px 40px rgba(0,0,0,0.5); backdrop-filter:blur(10px);
+    display:none; flex-direction:column; gap:4px;
+    animation:popIn 0.2s cubic-bezier(.34,1.56,.64,1);
+  }
+  .status-popover.open { display:flex; }
+  @keyframes popIn { from{opacity:0;transform:scale(0.9) translateY(-10px);} to{opacity:1;transform:scale(1) translateY(0);} }
+  
+  .status-opt {
+    padding:8px 12px; border-radius:8px; display:flex; align-items:center; gap:10px;
+    font-size:0.78rem; font-weight:700; color:var(--text); cursor:pointer; transition:all 0.2s;
+  }
+  .status-opt:hover { background:rgba(255,255,255,0.06); }
+  .status-opt .opt-dot { width:8px; height:8px; border-radius:50%; }
+
+  .status-select { 
+    background:rgba(255,255,255,0.03); border:1px solid var(--border); 
+    color:var(--muted); padding:6px 14px; border-radius:8px; font-size:0.7rem; 
+    font-weight:700; text-transform:uppercase; letter-spacing:1px;
+    cursor:pointer; outline:none; transition:all 0.2s;
+    display:inline-flex; align-items:center; gap:8px;
+  }
+  .status-select:hover { 
+    border-color:var(--red); color:var(--text); 
+    background:rgba(232,24,26,0.1); transform:translateY(-1px);
+    box-shadow:0 4px 12px rgba(232,24,26,0.15);
+  }
+  .status-select i { font-style:normal; font-size:0.9rem; }
 
   /* ─── MENU MANAGEMENT ─── */
   .page-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:28px; flex-wrap:wrap; gap:14px; }
@@ -399,6 +469,15 @@
   .img-upload-zone p { font-size:0.82rem; color:var(--muted); }
   .img-upload-zone .img-preview { max-width:100%; max-height:120px; border-radius:8px; object-fit:cover; display:none; }
 
+  .remove-photo-btn {
+    position:absolute; top:10px; right:10px; width:28px; height:28px;
+    background:#ff4757; color:#fff; border:none; border-radius:50%;
+    cursor:pointer; display:none; align-items:center; justify-content:center;
+    font-size:1.2rem; font-weight:700; z-index:10; transition:all 0.2s;
+    box-shadow:0 2px 10px rgba(0,0,0,0.2);
+  }
+  .remove-photo-btn:hover { background:#ff6b81; transform:scale(1.1); }
+
   .modal-footer { display:flex; gap:12px; justify-content:flex-end; margin-top:24px; }
   .btn-cancel {
     padding:11px 24px; border-radius:10px; border:1.5px solid var(--border);
@@ -490,6 +569,44 @@
   .empty-state { text-align:center; padding:60px 20px; color:var(--muted); }
   .empty-state .e-icon { font-size:3rem; margin-bottom:16px; opacity:0.4; }
   .empty-state p { font-size:0.9rem; }
+
+  /* ─── CATEGORY MANAGER ─── */
+  .btn-manage-cats {
+    background:rgba(255,255,255,0.05); border:1px solid var(--border);
+    color:var(--text); padding:8px 16px; border-radius:10px; font-size:0.85rem;
+    cursor:pointer; transition:all 0.2s; display:flex; align-items:center; gap:8px;
+  }
+  .btn-manage-cats:hover { background:rgba(255,255,255,0.1); border-color:var(--muted); }
+  
+  .cat-list { display:flex; flex-direction:column; gap:12px; margin-top:20px; }
+  .cat-item {
+    background:rgba(0,0,0,0.2); border:1px solid var(--border);
+    border-radius:10px; padding:12px 16px; display:flex; align-items:center; justify-content:space-between;
+  }
+  .cat-info { display:flex; align-items:center; gap:12px; }
+  .cat-icon-box { font-size:1.2rem; width:36px; height:36px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.05); border-radius:8px; }
+  .cat-name-lbl { font-weight:700; font-size:0.95rem; color:var(--text); }
+  .cat-actions { display:flex; gap:8px; }
+  .btn-cat-act { width:32px; height:32px; border-radius:8px; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s; }
+  .btn-cat-edit { background:rgba(59,130,246,0.15); color:#3b82f6; }
+  .btn-cat-edit:hover { background:rgba(59,130,246,0.3); }
+  .btn-cat-del { background:rgba(232,24,26,0.15); color:var(--red); }
+  .btn-cat-del:hover { background:rgba(232,24,26,0.3); }
+
+  /* ─── CREDITS ─── */
+  .admin-credits {
+    text-align:center; margin-top:24px; padding:10px;
+    font-size:0.8rem; color:rgba(255,255,255,0.25);
+    border-top:1px solid rgba(255,255,255,0.03);
+  }
+  .admin-credits a {
+    color:var(--red); text-decoration:none; font-weight:700;
+    transition:all 0.2s; display:inline-flex; align-items:center; gap:5px;
+  }
+  .admin-credits a:hover {
+    color:var(--yellow); text-shadow:0 0 10px rgba(245,197,24,0.3);
+    transform:scale(1.05);
+  }
 </style>
 </head>
 <body>
@@ -515,6 +632,9 @@
     <button class="login-btn" onclick="doLogin()">🔓 Access Control Panel</button>
     <div class="login-error" id="loginError">❌ Invalid username or password. Try again.</div>
     <p style="text-align:center;font-size:0.72rem;color:rgba(255,255,255,0.18);margin-top:20px;">Default: admin / meatandeat2024</p>
+    <div class="admin-credits" style="border-top:1px solid rgba(255,255,255,0.05); margin-top:30px;">
+      Created by <a href="https://wa.me/918072719603" target="_blank">Gowthaman</a>
+    </div>
   </div>
 </div>
 
@@ -533,21 +653,24 @@
     <nav class="sidebar-nav">
       <div class="nav-section-label">Overview</div>
       <div class="nav-item active" onclick="showPage('dashboard', this)">
-        <span class="icon">📊</span> Dashboard
+        <span class="icon">&#x1F4CA;</span> Dashboard
       </div>
       <div class="nav-section-label">Content</div>
       <div class="nav-item" onclick="showPage('menu', this)">
-        <span class="icon">🍔</span> Menu Items
+        <span class="icon">&#x1F354;</span> Menu Items
       </div>
       <div class="nav-section-label">System</div>
       <div class="nav-item" onclick="showPage('settings', this)">
-        <span class="icon">⚙️</span> Settings
+        <span class="icon">&#x2699;&#xFE0F;</span> Settings
       </div>
     </nav>
     <div class="sidebar-footer">
       <button class="logout-btn" onclick="doLogout()">
-        <span>🚪</span> Logout
+        <span>&#x1F6AA;</span> Logout
       </button>
+      <div class="admin-credits" style="margin-top:16px; border-top:1px solid rgba(255,255,255,0.03); padding-top:12px; font-size:0.68rem; opacity:0.6;">
+        Developed by <a href="https://wa.me/918072719603" target="_blank">Gowthaman</a>
+      </div>
     </div>
   </aside>
 
@@ -560,7 +683,7 @@
         <div class="topbar-title" id="topbarTitle">Dashboard</div>
       </div>
       <div class="topbar-right">
-        <div class="admin-badge">👑 ADMIN</div>
+        <div class="admin-badge">&#x1F451; ADMIN</div>
         <div class="admin-avatar">A</div>
       </div>
     </div>
@@ -568,56 +691,58 @@
     <!-- ── DASHBOARD PAGE ── -->
     <div class="page active" id="page-dashboard">
       <div class="stats-grid">
-        <div class="stat-card red">
-          <span class="s-icon">👥</span>
-          <div class="s-val" id="statCustomers">5,000+</div>
-          <div class="s-label">Happy Customers</div>
-          <span class="s-change up">↑ 12% this month</span>
-        </div>
-        <div class="stat-card yellow">
-          <span class="s-icon">🍽️</span>
-          <div class="s-val" id="statMenuItems">8</div>
-          <div class="s-label">Menu Items</div>
-          <span class="s-change up">↑ Active listings</span>
-        </div>
         <div class="stat-card green">
-          <span class="s-icon">⭐</span>
-          <div class="s-val">4.8</div>
-          <div class="s-label">Avg Rating</div>
-          <span class="s-change up">↑ 0.2 vs last month</span>
+          <div class="stat-card-pulse"></div>
+          <span class="s-icon">&#x1F4AC;</span>
+          <div class="s-val" id="statOnline">...</div>
+          <div class="s-label">Users Online Now</div>
+          <span class="s-change">Live Activity</span>
         </div>
         <div class="stat-card blue">
-          <span class="s-icon">📅</span>
-          <div class="s-val">12+</div>
-          <div class="s-label">Years in Business</div>
-          <span class="s-change up">↑ Est. 2012</span>
+          <span class="s-icon">&#x1F4E5;</span>
+          <div class="s-val" id="statInquiries">...</div>
+          <div class="s-label">Total Inquiries</div>
+          <span class="s-change" id="statInquiriesSub">Submissions</span>
+        </div>
+        <div class="stat-card yellow">
+          <span class="s-icon">&#x1F374;</span>
+          <div class="s-val" id="statMenuItems">...</div>
+          <div class="s-label">Menu Items</div>
+          <span class="s-change">Active Listings</span>
+        </div>
+        <div class="stat-card red">
+          <span class="s-icon">&#x2B50;</span>
+          <div class="s-val" id="statRating">...</div>
+          <div class="s-label">Avg Rating</div>
+          <span class="s-change">Customer Feedback</span>
         </div>
       </div>
 
       <div class="charts-row">
         <div class="chart-card">
-          <h3>📈 Weekly Visitors</h3>
+          <div class="chart-header">
+            <h3>&#x1F4C8; Visitor Traffic</h3>
+            <div class="chart-controls">
+              <button class="chart-btn active" onclick="changeTimeframe('daily', this)">Daily</button>
+              <button class="chart-btn" onclick="changeTimeframe('weekly', this)">Weekly</button>
+              <button class="chart-btn" onclick="changeTimeframe('monthly', this)">Monthly</button>
+              <button class="chart-btn" onclick="changeTimeframe('yearly', this)">Yearly</button>
+            </div>
+          </div>
+          <div class="chart-sub-header">
+            <div id="chartRange" class="chart-range-text">Loading range...</div>
+          </div>
           <div class="bar-chart" id="weeklyChart"></div>
         </div>
         <div class="chart-card">
           <h3>🍕 Menu Category Split</h3>
           <div class="donut-wrap">
-            <svg width="120" height="120" viewBox="0 0 120 120">
+            <svg width="120" height="120" viewBox="0 0 120 120" id="categoryDonut">
               <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="20"/>
-              <circle cx="60" cy="60" r="50" fill="none" stroke="#e8181a" stroke-width="20"
-                stroke-dasharray="78.5 235.5" stroke-dashoffset="0" transform="rotate(-90,60,60)"/>
-              <circle cx="60" cy="60" r="50" fill="none" stroke="#f5c518" stroke-width="20"
-                stroke-dasharray="78.5 235.5" stroke-dashoffset="-78.5" transform="rotate(-90,60,60)"/>
-              <circle cx="60" cy="60" r="50" fill="none" stroke="#22c55e" stroke-width="20"
-                stroke-dasharray="78.5 235.5" stroke-dashoffset="-157" transform="rotate(-90,60,60)"/>
-              <circle cx="60" cy="60" r="50" fill="none" stroke="#3b82f6" stroke-width="20"
-                stroke-dasharray="78.5 235.5" stroke-dashoffset="-235.5" transform="rotate(-90,60,60)"/>
+              <!-- Dynamically populated via renderCategoryChart() -->
             </svg>
-            <div class="donut-legend">
-              <div class="legend-item"><div class="legend-dot" style="background:#e8181a"></div><span class="legend-label">Burgers</span><span class="legend-val">25%</span></div>
-              <div class="legend-item"><div class="legend-dot" style="background:#f5c518"></div><span class="legend-label">Chicken</span><span class="legend-val">25%</span></div>
-              <div class="legend-item"><div class="legend-dot" style="background:#22c55e"></div><span class="legend-label">Sides</span><span class="legend-val">25%</span></div>
-              <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div><span class="legend-label">Drinks</span><span class="legend-val">25%</span></div>
+            <div class="donut-legend" id="categoryLegend">
+              <!-- Dynamically populated via renderCategoryChart() -->
             </div>
           </div>
         </div>
@@ -629,17 +754,15 @@
           <thead>
             <tr>
               <th>Name</th>
-              <th>City</th>
+              <th>Contact Info</th>
+              <th>Message</th>
               <th>Date</th>
               <th>Status</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody id="ordersTable">
-            <tr><td>Ravi K.</td><td>Komarapalayam</td><td>Apr 2, 2026</td><td><span class="badge-status done">Replied</span></td></tr>
-            <tr><td>Priya S.</td><td>Salem</td><td>Apr 1, 2026</td><td><span class="badge-status done">Replied</span></td></tr>
-            <tr><td>Arjun M.</td><td>Namakkal</td><td>Mar 30, 2026</td><td><span class="badge-status pending">Pending</span></td></tr>
-            <tr><td>Meena R.</td><td>Erode</td><td>Mar 28, 2026</td><td><span class="badge-status prep">In Review</span></td></tr>
-            <tr><td>Suresh P.</td><td>Salem</td><td>Mar 25, 2026</td><td><span class="badge-status done">Replied</span></td></tr>
+            <!-- Dynamically populated -->
           </tbody>
         </table>
       </div>
@@ -648,15 +771,14 @@
     <!-- ── MENU PAGE ── -->
     <div class="page" id="page-menu">
       <div class="page-header">
-        <h2>🍔 MENU ITEMS</h2>
-        <button class="btn-add" onclick="openAddModal()">＋ Add Item</button>
+        <h2>&#x1F354; MENU ITEMS</h2>
+        <div style="display:flex;gap:12px;">
+          <button class="btn-manage-cats" onclick="openCategoryModal()">📁 Categories</button>
+          <button class="btn-add" onclick="openAddModal()">＋ Add Item</button>
+        </div>
       </div>
-      <div class="cat-filter">
-        <button class="cat-btn active" onclick="filterAdmin('all',this)">🍽️ All</button>
-        <button class="cat-btn" onclick="filterAdmin('burger',this)">🍔 Burgers</button>
-        <button class="cat-btn" onclick="filterAdmin('chicken',this)">🍗 Chicken</button>
-        <button class="cat-btn" onclick="filterAdmin('sides',this)">🍟 Sides</button>
-        <button class="cat-btn" onclick="filterAdmin('drinks',this)">🥤 Drinks</button>
+      <div class="cat-filter" id="catFilter">
+        <!-- Dynamically populated via syncCategories() -->
       </div>
       <div class="menu-admin-grid" id="menuAdminGrid"></div>
     </div>
@@ -691,35 +813,35 @@
               <div class="t-label">Intro Animation</div>
               <div class="t-sub">Show loading intro screen</div>
             </div>
-            <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+            <button class="toggle" data-feature="intro" onclick="updateToggleState('intro', this)"></button>
           </div>
           <div class="toggle-row">
             <div class="toggle-info">
               <div class="t-label">WhatsApp Button</div>
               <div class="t-sub">Floating WhatsApp contact</div>
             </div>
-            <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+            <button class="toggle" data-feature="whatsapp" onclick="updateToggleState('whatsapp', this)"></button>
           </div>
           <div class="toggle-row">
             <div class="toggle-info">
               <div class="t-label">Custom Cursor</div>
               <div class="t-sub">Animated cursor effect</div>
             </div>
-            <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+            <button class="toggle" data-feature="cursor" onclick="updateToggleState('cursor', this)"></button>
           </div>
           <div class="toggle-row">
             <div class="toggle-info">
               <div class="t-label">Reviews Section</div>
               <div class="t-sub">Show customer reviews</div>
             </div>
-            <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+            <button class="toggle" data-feature="reviews" onclick="updateToggleState('reviews', this)"></button>
           </div>
           <div class="toggle-row">
             <div class="toggle-info">
               <div class="t-label">Contact Form</div>
               <div class="t-sub">Enable contact submissions</div>
             </div>
-            <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+            <button class="toggle" data-feature="contact" onclick="updateToggleState('contact', this)"></button>
           </div>
         </div>
 
@@ -757,8 +879,9 @@
           <button class="btn-save" onclick="saveStatConfig()" style="width:100%;margin-top:4px;">💾 Update Stats</button>
         </div>
       </div>
+    <div class="admin-credits" style="margin: 40px 0 20px;">
+      Created by <a href="https://wa.me/918072719603" target="_blank">Gowthaman</a>
     </div>
-
   </div><!-- end .main -->
 </div><!-- end #adminPanel -->
 
@@ -776,12 +899,10 @@
     <div class="form-row">
       <div class="form-group">
         <label>Category</label>
-        <select id="mCat">
-          <option value="burger">🍔 Burger</option>
-          <option value="chicken">🍗 Chicken</option>
-          <option value="sides">🍟 Sides</option>
-          <option value="drinks">🥤 Drinks</option>
+        <select id="mCat" onchange="toggleNewCat(this.value)">
+          <!-- Dynamically populated -->
         </select>
+        <input type="text" id="mNewCat" placeholder="Type new category name..." style="display:none;margin-top:10px;">
       </div>
       <div class="form-group">
         <label>Price (₹)</label>
@@ -799,15 +920,16 @@
       </div>
       <div class="form-group">
         <label>Badge (optional)</label>
-        <input type="text" id="mBadge" placeholder="⭐ BEST SELLER">
+        <input type="text" id="mBadge" placeholder="&#x2B50; BEST SELLER">
       </div>
     </div>
     <div class="form-group">
       <label>Item Photo</label>
       <div class="img-upload-zone" id="uploadZone">
         <input type="file" accept="image/*" id="imgInput" onchange="previewImg(this)">
-        <div class="upload-icon">📷</div>
+        <div class="upload-icon">&#x1F4F7;</div>
         <p>Click to upload image (JPG, PNG, WebP)</p>
+        <button class="remove-photo-btn" id="removePhotoBtn" onclick="removePhoto(event)" type="button" title="Remove Photo">&times;</button>
         <img class="img-preview" id="imgPreview" alt="preview">
       </div>
     </div>
@@ -818,24 +940,48 @@
   </div>
 </div>
 
+<!-- DELETE CONFIRM MOVED TO BOTTOM TO ENSURE OVERLAY TOP -->
+
+<!-- ══ MANAGE CATEGORIES MODAL ══ -->
+<div class="modal-backdrop" id="categoryModal">
+  <div class="modal" style="max-width:440px;">
+    <div class="modal-header">
+      <h3>📁 Manage Categories</h3>
+      <button class="modal-close" onclick="closeModal('categoryModal')">✕</button>
+    </div>
+    <div class="modal-body" style="padding:0 24px 24px;">
+      <div style="display:flex;gap:10px;margin-bottom:20px;padding-bottom:15px;border-bottom:1px solid var(--border);">
+        <input type="text" id="newCatInput" placeholder="New category name (e.g. Desserts)" style="flex:1;padding:10px;border-radius:8px;background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text);">
+        <button class="btn-add" onclick="createCategory()" style="padding:10px 20px;">＋ Add</button>
+      </div>
+      <p style="font-size:0.8rem;color:var(--muted);margin-bottom:12px;">Editing a category name will update all items in it.</p>
+      <div class="cat-list" id="catList">
+        <!-- Dynamically populated via openCategoryModal() -->
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ══ DELETE CONFIRM MODAL ══ -->
-<div class="modal-backdrop" id="deleteModal">
+<div class="modal-backdrop" id="deleteModal" style="z-index:700;">
   <div class="confirm-modal">
-    <div class="c-icon">🗑️</div>
-    <h4>Delete Menu Item?</h4>
-    <p>This will permanently remove the item from the menu. This action cannot be undone.</p>
+    <div class="c-icon" id="delIcon">🗑️</div>
+    <h4 id="delTitle">Delete Menu Item?</h4>
+    <p id="delMsg">This will permanently remove the item from the menu. This action cannot be undone.</p>
     <div class="confirm-btns">
       <button class="btn-cancel" onclick="closeModal('deleteModal')">Cancel</button>
-      <button class="btn-save" style="background:linear-gradient(135deg,#dc2626,#ef4444);" onclick="confirmDelete()">Delete</button>
+      <button class="btn-save" id="btnConfirmDelete" style="background:linear-gradient(135deg,#dc2626,#ef4444);" onclick="handleDeleteConfirm()">Delete</button>
     </div>
   </div>
 </div>
 
 <!-- TOAST -->
-<div class="toast" id="toast">
+<div class="toast" id="toast" style="z-index:999;">
   <span class="t-icon" id="toastIcon">✅</span>
   <span class="t-msg" id="toastMsg">Saved successfully!</span>
 </div>
+
+<!-- Firebase SDK moved to bottom of body to ensure global functions are available -->
 
 <script>
 /* ══════════════════════════
@@ -849,9 +995,8 @@ function doLogin() {
   const p = document.getElementById('loginPass').value.trim();
   const err = document.getElementById('loginError');
   if (u === ADMIN_USER && p === ADMIN_PASS) {
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('adminPanel').style.display = 'block';
-    initPanel();
+    sessionStorage.setItem('me_admin_auth', 'true');
+    showAdmin();
   } else {
     err.classList.add('show');
     document.getElementById('loginPass').value = '';
@@ -859,12 +1004,21 @@ function doLogin() {
   }
 }
 
+function showAdmin() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('adminPanel').style.display = 'block';
+  initPanel();
+}
+
 function doLogout() {
+  sessionStorage.removeItem('me_admin_auth');
   document.getElementById('adminPanel').style.display = 'none';
   document.getElementById('loginScreen').style.display = 'flex';
   document.getElementById('loginUser').value = '';
   document.getElementById('loginPass').value = '';
 }
+
+// Auth check moved to Firebase module script to avoid race conditions
 
 // Allow Enter key on login
 document.addEventListener('keydown', e => {
@@ -874,31 +1028,21 @@ document.addEventListener('keydown', e => {
 });
 
 /* ══════════════════════════
-   MENU DATA
+   FIREBASE HELPERS
 ══════════════════════════ */
-let menuItems = [
-  { id:1, name:'Classic Smash Burger', cat:'burger', price:199, desc:'Juicy smashed patty, cheddar, house sauce, pickles on brioche bun.', emoji:'🍔', badge:'⭐ BEST SELLER', img:'' },
-  { id:2, name:'Double Meat Stack',    cat:'burger', price:299, desc:'Double patties, smoky bacon, jalapeños, crispy onions.', emoji:'🥩', badge:'', img:'' },
-  { id:3, name:'Crispy Fried Chicken', cat:'chicken', price:179, desc:'Secret spice blend, ultra-crispy skin, tender inside.', emoji:'🍗', badge:'🔥 SPICY', img:'' },
-  { id:4, name:'Grilled Chicken Wrap', cat:'chicken', price:159, desc:'Flame-grilled strips, garlic sauce, fresh veggies, warm tortilla.', emoji:'🌮', badge:'', img:'' },
-  { id:5, name:'Loaded Cheese Fries',  cat:'sides',   price:129, desc:'Golden fries topped with cheddar sauce, jalapeños and chives.', emoji:'🍟', badge:'', img:'' },
-  { id:6, name:'Onion Rings',          cat:'sides',   price:99,  desc:'Thick-cut rings in a light, airy beer batter. Served with ranch.', emoji:'🧅', badge:'', img:'' },
-  { id:7, name:'Signature Milkshake',  cat:'drinks',  price:129, desc:'Thick, creamy shakes in chocolate, vanilla or strawberry.', emoji:'🥤', badge:'', img:'' },
-  { id:8, name:'Fresh Lemonade',       cat:'drinks',  price:79,  desc:'Squeezed daily, served chilled with a hint of mint.', emoji:'🧃', badge:'', img:'' },
-];
-let nextId = 9;
+const db  = () => window._db;
+const fs  = () => window._fs;
+const fdb = () => !!(window._db && window._fs);
+
+/* ══════════════════════════
+   GLOBAL DATA (Synced with Module)
+══════════════════════════ */
+window.menuItems = [];
+window.analyticsData = [];
 let editingId = null;
 let deletingId = null;
 let currentAdminCat = 'all';
-
-/* ══════════════════════════
-   INIT
-══════════════════════════ */
-function initPanel() {
-  buildWeeklyChart();
-  renderMenuGrid();
-  document.getElementById('statMenuItems').textContent = menuItems.length;
-}
+let currentTimeframe = 'daily';
 
 /* ══════════════════════════
    NAVIGATION
@@ -909,13 +1053,11 @@ function showPage(page, el) {
   document.getElementById('page-' + page).classList.add('active');
   if (el) el.classList.add('active');
   const titles = { dashboard:'Dashboard', menu:'Menu Items', settings:'Settings' };
-  document.getElementById('topbarTitle').textContent = titles[page] || page;
+  const tt = document.getElementById('topbarTitle');
+  if (tt) tt.textContent = titles[page] || page;
   closeSidebar();
 }
 
-/* ══════════════════════════
-   SIDEBAR (MOBILE)
-══════════════════════════ */
 function toggleSidebar() {
   document.getElementById('sidebar').classList.toggle('open');
   document.getElementById('sidebarOverlay').classList.toggle('open');
@@ -925,56 +1067,87 @@ function closeSidebar() {
   document.getElementById('sidebarOverlay').classList.remove('open');
 }
 
-/* ══════════════════════════
-   WEEKLY CHART
-══════════════════════════ */
 function buildWeeklyChart() {
-  const data = [
-    { day:'Mon', val:42 }, { day:'Tue', val:65 }, { day:'Wed', val:55 },
-    { day:'Thu', val:80 }, { day:'Fri', val:95 }, { day:'Sat', val:120 },
-    { day:'Sun', val:110 },
-  ];
-  const max = Math.max(...data.map(d => d.val));
-  const container = document.getElementById('weeklyChart');
-  container.innerHTML = data.map(d => `
-    <div class="bar-col">
-      <div class="bar-val">${d.val}</div>
-      <div class="bar" style="height:${(d.val/max)*110}px"></div>
-      <div class="bar-label">${d.day}</div>
-    </div>
-  `).join('');
+  // Empty placeholder - will be filled by subscribers
+}
+
+function renderOrdersTable(data) {
+  const tbody = document.getElementById('ordersTable');
+  if (!tbody) return;
+  if (!data || !data.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No contact submissions yet.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = data.map(o => {
+    const s = o.status || 'pending';
+    const sText = s.charAt(0).toUpperCase() + s.slice(1);
+    const sIcon = s==='pending'?'⏳':(s==='contacted'?'✅':'❌');
+    const contactInfo = `📧 ${o.email || '-'}<br>📞 ${o.phone || '-'}`;
+    
+    return `
+      <tr>
+        <td style="font-weight:700;color:var(--text);">${o.name} <br><small style="color:var(--muted);">${o.city}</small></td>
+        <td style="font-size:0.8rem;">${contactInfo}</td>
+        <td style="max-width:250px;"><div style="font-size:0.8rem;white-space:normal;color:var(--muted);">${o.message || '-'}</div></td>
+        <td style="font-size:0.8rem;">${o.date}</td>
+        <td><span class="badge-status ${s}">${sIcon} ${sText}</span></td>
+        <td>
+          <div class="status-wrapper">
+            <button class="status-select" onclick="toggleStatusMenu('${o.id}', event)">
+              <i>✏️</i> Update
+            </button>
+            <div class="status-popover" id="pop-${o.id}">
+              <div class="status-opt" onclick="updateAndCloseStatus('${o.id}', 'pending')">
+                <div class="opt-dot" style="background:#f5c518"></div> Pending
+              </div>
+              <div class="status-opt" onclick="updateAndCloseStatus('${o.id}', 'contacted')">
+                <div class="opt-dot" style="background:#22c55e"></div> Contacted
+              </div>
+              <div class="status-opt" onclick="updateAndCloseStatus('${o.id}', 'rejected')">
+                <div class="opt-dot" style="background:#ff4757"></div> Rejected
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
 }
 
 /* ══════════════════════════
-   MENU GRID
+   MENU GRID (Visual Only)
 ══════════════════════════ */
 function renderMenuGrid() {
   const grid = document.getElementById('menuAdminGrid');
-  const items = currentAdminCat === 'all' ? menuItems : menuItems.filter(i => i.cat === currentAdminCat);
+  const items = currentAdminCat === 'all' ? window.menuItems : window.menuItems.filter(i => i.cat === currentAdminCat);
   if (!items.length) {
-    grid.innerHTML = '<div class="empty-state"><div class="e-icon">🍽️</div><p>No items in this category.</p></div>';
+    const E = String.fromCodePoint;
+    grid.innerHTML = `<div class="empty-state"><div class="e-icon">${E(0x1F37D)}${E(0xFE0F)}</div><p>No items in this category.</p></div>`;
     return;
   }
-  const catLabels = { burger:'🍔 Burger', chicken:'🍗 Chicken', sides:'🍟 Sides', drinks:'🥤 Drinks' };
+  const E = String.fromCodePoint;
+  const catLabels = { 
+    burger:  E(0x1F354) + ' Burger', 
+    chicken: E(0x1F357) + ' Chicken', 
+    sides:   E(0x1F35F) + ' Sides', 
+    drinks:  E(0x1F964) + ' Drinks' 
+  };
   grid.innerHTML = items.map(item => `
     <div class="menu-admin-card" id="card-${item.id}">
-      <div class="mac-img" onclick="openEditModal(${item.id})">
+      <div class="mac-img" onclick="openEditModal('${item.id}')">
         ${item.img ? `<img src="${item.img}" alt="${item.name}">` : `<span>${item.emoji}</span>`}
-        <div class="mac-img-overlay">
-          <span>📷</span>
-          <span>CHANGE PHOTO</span>
-        </div>
+        <div class="mac-img-overlay"><span>&#x1F4F7;</span><span>CHANGE PHOTO</span></div>
         ${item.badge ? `<span class="menu-card-badge" style="position:absolute;top:10px;right:10px;background:#e8181a;color:#fff;font-size:.7rem;padding:3px 10px;border-radius:20px;font-weight:800;z-index:2;">${item.badge}</span>` : ''}
       </div>
       <div class="mac-body">
-        <div class="mac-cat-badge">${catLabels[item.cat]}</div>
+        <div class="mac-cat-badge">${catLabels[item.cat] || item.cat}</div>
         <div class="mac-name">${item.name}</div>
         <div class="mac-desc">${item.desc}</div>
         <div class="mac-footer">
           <div class="mac-price">₹${item.price}</div>
           <div class="mac-actions">
-            <button class="mac-btn edit" onclick="openEditModal(${item.id})" title="Edit">✏️</button>
-            <button class="mac-btn del" onclick="openDeleteModal(${item.id})" title="Delete">🗑️</button>
+            <button class="mac-btn edit" onclick="openEditModal('${item.id}')" title="Edit">✏️</button>
+            <button class="mac-btn del" onclick="openDeleteModal('${item.id}')" title="Delete">🗑️</button>
           </div>
         </div>
       </div>
@@ -1000,7 +1173,10 @@ function openAddModal() {
   document.getElementById('mPrice').value = '';
   document.getElementById('mCat').value = 'burger';
   document.getElementById('imgPreview').style.display = 'none';
+  document.getElementById('removePhotoBtn').style.display = 'none';
   document.getElementById('imgInput').value = '';
+  document.querySelector('.img-upload-zone .upload-icon').style.display = 'block';
+  document.querySelector('.img-upload-zone p').style.display = 'block';
   document.getElementById('menuModal').classList.add('open');
 }
 
@@ -1017,36 +1193,66 @@ function openEditModal(id) {
   document.getElementById('mBadge').value = item.badge;
   const prev = document.getElementById('imgPreview');
   if (item.img) {
-    prev.src = item.img;
-    prev.style.display = 'block';
+    prev.src = item.img; prev.style.display = 'block';
+    document.getElementById('removePhotoBtn').style.display = 'flex';
+    document.querySelector('.img-upload-zone .upload-icon').style.display = 'none';
+    document.querySelector('.img-upload-zone p').style.display = 'none';
   } else {
     prev.style.display = 'none';
+    document.getElementById('removePhotoBtn').style.display = 'none';
+    document.querySelector('.img-upload-zone .upload-icon').style.display = 'block';
+    document.querySelector('.img-upload-zone p').style.display = 'block';
   }
   document.getElementById('menuModal').classList.add('open');
 }
 
-function saveMenuItem() {
+async function saveMenuItem() {
+  const E = String.fromCodePoint;
   const name  = document.getElementById('mName').value.trim();
   const cat   = document.getElementById('mCat').value;
+  const newCat = document.getElementById('mNewCat').value.trim();
+  const finalCat = (cat === 'other' && newCat) ? newCat.toLowerCase() : cat;
+  
   const price = parseInt(document.getElementById('mPrice').value);
   const desc  = document.getElementById('mDesc').value.trim();
-  const emoji = document.getElementById('mEmoji').value.trim() || '🍽️';
+  const emoji = document.getElementById('mEmoji').value.trim() || E(0x1F37D)+E(0xFE0F);
   const badge = document.getElementById('mBadge').value.trim();
   const imgEl = document.getElementById('imgPreview');
   const img   = imgEl.style.display !== 'none' ? imgEl.src : '';
 
-  if (!name || !price || !desc) { showToast('⚠️', 'Please fill all required fields!'); return; }
+  if (!name || (!finalCat && cat==='other') || isNaN(price) || !desc) { 
+    showToast(E(0x26A0)+E(0xFE0F), 'Fill all required fields!'); return; 
+  }
 
-  if (editingId) {
-    const idx = menuItems.findIndex(i => i.id === editingId);
-    menuItems[idx] = { ...menuItems[idx], name, cat, price, desc, emoji, badge, img };
-    showToast('✅', 'Menu item updated!');
+  const itemData = { name, cat: finalCat, price, desc, emoji, badge, img };
+
+  if (fdb()) {
+    const { collection, addDoc, doc, setDoc } = fs();
+    showToast(E(0x1F504), 'Saving to cloud...');
+    try {
+      if (editingId) {
+        await setDoc(doc(db(), 'menuItems', editingId), itemData);
+      } else {
+        await addDoc(collection(db(), 'menuItems'), itemData);
+      }
+      showToast(E(0x2705), editingId ? 'Item updated in cloud!' : 'New item added to cloud!');
+    } catch(e) {
+      showToast(E(0x274C), 'Save failed. Check connection.');
+    }
   } else {
-    menuItems.push({ id: nextId++, name, cat, price, desc, emoji, badge, img });
-    showToast('✅', 'New item added to menu!');
+    // localStorage fallback
+    if (editingId) {
+      const idx = window.menuItems.findIndex(i => i.id === editingId);
+      if (idx !== -1) window.menuItems[idx] = { ...window.menuItems[idx], ...itemData };
+      showToast(E(0x2705), 'Item updated (offline).');
+    } else {
+      window.menuItems.push({ id: Date.now().toString(), ...itemData });
+      showToast(E(0x2705), 'Item added (offline).');
+    }
+    localStorage.setItem('meatAndEatMenu', JSON.stringify(window.menuItems));
+    renderMenuGrid();
   }
   closeModal('menuModal');
-  renderMenuGrid();
 }
 
 function previewImg(input) {
@@ -1056,6 +1262,7 @@ function previewImg(input) {
       const prev = document.getElementById('imgPreview');
       prev.src = e.target.result;
       prev.style.display = 'block';
+      document.getElementById('removePhotoBtn').style.display = 'flex';
       document.querySelector('.img-upload-zone .upload-icon').style.display = 'none';
       document.querySelector('.img-upload-zone p').style.display = 'none';
     };
@@ -1063,54 +1270,125 @@ function previewImg(input) {
   }
 }
 
+function removePhoto(e) {
+  if (e) e.stopPropagation();
+  document.getElementById('imgInput').value = '';
+  const prev = document.getElementById('imgPreview');
+  prev.src = '';
+  prev.style.display = 'none';
+  document.getElementById('removePhotoBtn').style.display = 'none';
+  document.querySelector('.img-upload-zone .upload-icon').style.display = 'block';
+  document.querySelector('.img-upload-zone p').style.display = 'block';
+}
+
 /* ══════════════════════════
    DELETE
 ══════════════════════════ */
-function openDeleteModal(id) {
-  deletingId = id;
+let pendingDeleteId = null;
+let pendingDeleteType = 'item'; // 'item' or 'category'
+
+window.openDeleteModal = function(id) {
+  pendingDeleteId = id;
+  pendingDeleteType = 'item';
+  document.getElementById('delTitle').textContent = 'Delete Menu Item?';
+  document.getElementById('delMsg').textContent = 'This will permanently remove this item from your menu.';
   document.getElementById('deleteModal').classList.add('open');
 }
 
-function confirmDelete() {
-  menuItems = menuItems.filter(i => i.id !== deletingId);
+window.handleDeleteConfirm = function() {
+  if (pendingDeleteType === 'item') {
+    confirmDelete();
+  } else {
+    if (typeof window.executeDeleteCategory === 'function') {
+      window.executeDeleteCategory();
+    }
+  }
+}
+
+async function confirmDelete() {
+  if (!pendingDeleteId) return;
+  const id = pendingDeleteId;
+  const E = String.fromCodePoint;
+
+  if (fdb()) {
+    const { doc, deleteDoc } = fs();
+    showToast(E(0x1F504), 'Deleting...');
+    try {
+      await deleteDoc(doc(db(), 'menuItems', id));
+      showToast(E(0x1F5D1)+E(0xFE0F), 'Item deleted from cloud!');
+    } catch(e) {
+      showToast(E(0x274C), 'Delete failed.');
+    }
+  } else {
+    window.menuItems = window.menuItems.filter(i => i.id !== id);
+    localStorage.setItem('meatAndEatMenu', JSON.stringify(window.menuItems));
+    renderMenuGrid();
+    showToast(E(0x1F5D1)+E(0xFE0F), 'Item deleted (offline).');
+  }
   closeModal('deleteModal');
-  renderMenuGrid();
-  showToast('🗑️', 'Item deleted from menu.');
 }
 
 /* ══════════════════════════
-   SETTINGS
+   SETTINGS & TOGGLES
 ══════════════════════════ */
-function saveSettings() {
-  showToast('✅', 'Restaurant info saved!');
+// Real-time loading handled by bottom module
+
+document.querySelectorAll('.toggle').forEach((t) => {
+  t.addEventListener('click', async () => {
+    t.classList.toggle('on');
+    const ui = document.querySelectorAll('.toggle');
+    const state = { intro:ui[0].classList.contains('on'), whatsapp:ui[1].classList.contains('on'), cursor:ui[2].classList.contains('on'), reviews:ui[3].classList.contains('on'), contact:ui[4].classList.contains('on') };
+    if (fdb()) {
+      const { doc, setDoc } = fs();
+      await setDoc(doc(db(), 'settings', 'toggles'), state);
+    }
+  });
+});
+
+async function saveSettings() {
+  const conf = { name: document.getElementById('sName').value, phone: document.getElementById('sPhone').value, address: document.getElementById('sAddress').value };
+  if (fdb()) {
+    const { doc, setDoc } = fs();
+    await setDoc(doc(db(), 'settings', 'restaurantInfo'), conf);
+    showToast(String.fromCodePoint(0x2705), 'Settings saved to cloud!');
+  } else {
+    localStorage.setItem('meatAndEatSettings', JSON.stringify(conf));
+    showToast(String.fromCodePoint(0x2705), 'Settings saved (offline).');
+  }
 }
 
-function saveStatConfig() {
-  showToast('✅', 'Website stats updated!');
+async function saveStatConfig() {
+  const stats = { customers: document.getElementById('statCustInput').value, years: document.getElementById('statYearsInput').value, rating: document.getElementById('statRatingInput').value };
+  if (fdb()) {
+    const { doc, setDoc } = fs();
+    await setDoc(doc(db(), 'settings', 'stats'), stats);
+    document.getElementById('statCustomers').textContent = stats.customers + '+';
+    showToast(String.fromCodePoint(0x2705), 'Stats updated in cloud!');
+  } else {
+    localStorage.setItem('meatAndEatStats', JSON.stringify(stats));
+    document.getElementById('statCustomers').textContent = stats.customers + '+';
+    showToast(String.fromCodePoint(0x2705), 'Stats updated (offline).');
+  }
 }
 
 function changePassword() {
   const cur = document.getElementById('curPass').value;
   const nw  = document.getElementById('newPass').value;
   const cn  = document.getElementById('conPass').value;
-  if (cur !== ADMIN_PASS) { showToast('❌', 'Current password is incorrect!'); return; }
-  if (nw.length < 6)      { showToast('⚠️', 'New password too short (min 6 chars)!'); return; }
-  if (nw !== cn)           { showToast('❌', 'Passwords do not match!'); return; }
+  if (cur !== ADMIN_PASS) { showToast(String.fromCodePoint(0x274C), 'Current password is incorrect!'); return; }
+  if (nw.length < 6)      { showToast(String.fromCodePoint(0x26A0)+String.fromCodePoint(0xFE0F), 'New password too short (min 6 chars)!'); return; }
+  if (nw !== cn)           { showToast(String.fromCodePoint(0x274C), 'Passwords do not match!'); return; }
   ADMIN_PASS = nw;
   ['curPass','newPass','conPass'].forEach(id => document.getElementById(id).value = '');
-  showToast('🔑', 'Password changed successfully!');
+  showToast(String.fromCodePoint(0x1F511), 'Password changed!');
 }
 
 /* ══════════════════════════
    MODALS
 ══════════════════════════ */
-function closeModal(id) {
-  document.getElementById(id).classList.remove('open');
-}
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 document.querySelectorAll('.modal-backdrop').forEach(bd => {
-  bd.addEventListener('click', function(e) {
-    if (e.target === this) closeModal(this.id);
-  });
+  bd.addEventListener('click', function(e) { if (e.target === this) closeModal(this.id); });
 });
 
 /* ══════════════════════════
@@ -1125,6 +1403,382 @@ function showToast(icon, msg) {
   t.classList.add('show');
   toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
 }
+
+// Presence logic moved to module script at bottom
+</script>
+<!-- ══ FIREBASE SDK & CORE ENGINE ══ -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+  import { getFirestore, collection, getDocs, addDoc, setDoc, deleteDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-analytics.js";
+  
+  const firebaseConfig = {
+    apiKey: "AIzaSyAsPfl2PReDArhtwLKGx2APS8muvelSLgE",
+    authDomain: "meat-and-eat-66364.firebaseapp.com",
+    projectId: "meat-and-eat-66364",
+    storageBucket: "meat-and-eat-66364.firebasestorage.app",
+    messagingSenderId: "484951333553",
+    appId: "1:484951333553:web:bc91360f3c7a428d29a090",
+    measurementId: "G-Q5JMYNZM99"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const dbInstance = getFirestore(app);
+  getAnalytics(app);
+
+  const DEFAULT_MENU = [
+    { name:'Classic Smash Burger', cat:'burger', price:199, desc:'Juicy smashed patty, cheddar, house sauce, pickles on brioche bun.', emoji:'🍔', badge:'⭐ BEST SELLER', img:'' },
+    { name:'Double Meat Stack',    cat:'burger', price:299, desc:'Double patties, smoky bacon, jalapeños, crispy onions.', emoji:'🥩', badge:'', img:'' },
+    { name:'Crispy Fried Chicken', cat:'chicken', price:179, desc:'Secret spice blend, ultra-crispy skin, tender inside.', emoji:'🍗', badge:'🔥 SPICY', img:'' },
+    { name:'Grilled Chicken Wrap', cat:'chicken', price:159, desc:'Flame-grilled strips, garlic sauce, fresh veggies, warm tortilla.', emoji:'🌮', badge:'', img:'' },
+    { name:'Loaded Cheese Fries',  cat:'sides',   price:129, desc:'Golden fries topped with cheddar sauce, jalapeños and chives.', emoji:'🍟', badge:'', img:'' },
+    { name:'Onion Rings',          cat:'sides',   price:99,  desc:'Thick-cut rings in a light, airy beer batter. Served with ranch.', emoji:'🧅', badge:'', img:'' },
+    { name:'Signature Milkshake',  cat:'drinks',  price:129, desc:'Thick, creamy shakes in chocolate, vanilla or strawberry.', emoji:'🥤', badge:'', img:'' },
+    { name:'Fresh Lemonade',       cat:'drinks',  price:79,  desc:'Squeezed daily, served chilled with a hint of mint.', emoji:'🧃', badge:'', img:'' },
+  ];
+
+  // Global State (Move to Window for UI access)
+  window._db = dbInstance;
+  window._fs = { collection, getDocs, addDoc, setDoc, deleteDoc, doc, onSnapshot };
+
+  /* ══════════════════════════
+     CORE DATA ENGINE
+  ══════════════════════════ */
+  let menuUnsubscribe = null, contactsUnsubscribe = null, analyticsUnsubscribe = null, presenceUnsubscribe = null;
+
+  window.initPanel = function() {
+    if (typeof buildWeeklyChart === 'function') buildWeeklyChart();
+    subscribeToCategories();
+    subscribeToMenu();
+    subscribeToContacts();
+    loadSettingsFromCloud();
+    subscribeToPresence();
+    subscribeToAnalytics();
+  };
+
+  async function seedDefaultCategories() {
+    const snap = await getDocs(collection(dbInstance, 'categories'));
+    if (snap.empty) {
+      const defaults = { burger:'Burgers', chicken:'Chicken', sides:'Sides', drinks:'Drinks' };
+      for (const id in defaults) { await setDoc(doc(dbInstance, 'categories', id), { name: defaults[id] }); }
+    }
+  }
+
+  function subscribeToCategories() {
+    seedDefaultCategories();
+    onSnapshot(collection(dbInstance, 'categories'), snap => {
+      window.categories = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      syncCategories();
+    });
+  }
+
+  async function seedDefaultMenu() {
+    const snap = await getDocs(collection(dbInstance, 'menuItems'));
+    if (snap.empty) {
+      showToast('🔄', 'Seeding default menu...');
+      for (const item of DEFAULT_MENU) { await addDoc(collection(dbInstance, 'menuItems'), item); }
+      showToast('✅', 'Default menu loaded!');
+    }
+  }
+
+  function subscribeToMenu() {
+    seedDefaultMenu();
+    if (menuUnsubscribe) menuUnsubscribe();
+    menuUnsubscribe = onSnapshot(collection(dbInstance, 'menuItems'), snap => {
+      window.menuItems = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      syncCategories(); // Refresh dynamic UI
+      if (typeof renderMenuGrid === 'function') renderMenuGrid();
+      const el = document.getElementById('statMenuItems');
+      if (el) el.textContent = window.menuItems.length;
+    });
+  }
+
+  function syncCategories() {
+    const cats = window.categories || [];
+    const E = String.fromCodePoint;
+    const catIcons = { burger:E(0x1F354), chicken:E(0x1F357), sides:E(0x1F35F), drinks:E(0x1F964) };
+    
+    // Sidebar Filters
+    const sidebar = document.getElementById('catFilter');
+    if (sidebar) {
+      const allBtn = `<button class="cat-btn ${currentAdminCat==='all'?'active':''}" onclick="filterAdmin('all',this)">🍽️ All</button>`;
+      const catBtns = cats.map(c => {
+        const icon = catIcons[c.id] || '🍴';
+        return `<button class="cat-btn ${currentAdminCat===c.id?'active':''}" onclick="filterAdmin('${c.id}',this)">${icon} ${c.name}</button>`;
+      }).join('');
+      sidebar.innerHTML = allBtn + catBtns;
+    }
+
+    // Modal Select
+    const select = document.getElementById('mCat');
+    if (select) {
+      const options = cats.map(c => {
+        const icon = catIcons[c.id] || '🍴';
+        return `<option value="${c.id}">${icon} ${c.name}</option>`;
+      }).join('');
+      select.innerHTML = options + `<option value="other" style="color:var(--red);">➕ Add New Category...</option>`;
+    }
+
+    renderCategoryChart();
+  }
+
+  function renderCategoryChart() {
+    const items = window.menuItems || [];
+    const cats = window.categories || [];
+    if (!items.length) return;
+
+    const counts = {};
+    items.forEach(i => { counts[i.cat] = (counts[i.cat] || 0) + 1; });
+
+    const total = items.length;
+    const colors = { burger:'#e8181a', chicken:'#f5c518', sides:'#22c55e', drinks:'#3b82f6' };
+    const defaultColors = ['#9333ea', '#a855f7', '#fb923c', '#2dd4bf'];
+    
+    const svg = document.getElementById('categoryDonut');
+    const legend = document.getElementById('categoryLegend');
+    if (!svg || !legend) return;
+
+    // Preserve the background circle
+    const bgCircle = '<circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="20"/>';
+    let segments = bgCircle;
+    let legendHtml = '';
+    let currentOffset = 0;
+    const circumference = 2 * Math.PI * 50;
+
+    cats.forEach((c, idx) => {
+      const count = counts[c.id] || 0;
+      if (count === 0) return;
+      
+      const pct = (count / total);
+      const strokeLen = pct * circumference;
+      const color = colors[c.id] || defaultColors[idx % defaultColors.length];
+
+      segments += `
+        <circle cx="60" cy="60" r="50" fill="none" stroke="${color}" stroke-width="20"
+          stroke-dasharray="${strokeLen} ${circumference}" stroke-dashoffset="-${currentOffset}" 
+          transform="rotate(-90,60,60)"/>
+      `;
+      
+      legendHtml += `
+        <div class="legend-item">
+          <div class="legend-dot" style="background:${color}"></div>
+          <span class="legend-label">${c.name}</span>
+          <span class="legend-val">${Math.round(pct * 100)}%</span>
+        </div>
+      `;
+      currentOffset += strokeLen;
+    });
+
+    svg.innerHTML = segments;
+    legend.innerHTML = legendHtml;
+  }
+
+  window.toggleNewCat = function(val) {
+    document.getElementById('mNewCat').style.display = (val === 'other') ? 'block' : 'none';
+  }
+
+  window.openCategoryModal = function() {
+    const cats = window.categories || [];
+    const E = String.fromCodePoint;
+    const catIcons = { burger:E(0x1F354), chicken:E(0x1F357), sides:E(0x1F35F), drinks:E(0x1F964) };
+    const list = document.getElementById('catList');
+    list.innerHTML = cats.map(c => `
+      <div class="cat-item">
+        <div class="cat-info">
+          <div class="cat-icon-box">${catIcons[c.id] || '🍴'}</div>
+          <div class="cat-name-lbl">${c.name}</div>
+        </div>
+        <div class="cat-actions">
+          <button class="btn-cat-act btn-cat-edit" onclick="promptRenameCategory('${c.id}', '${c.name}')" title="Rename">✏️</button>
+          <button class="btn-cat-act btn-cat-del" onclick="confirmDeleteCategory('${c.id}')" title="Delete">🗑️</button>
+        </div>
+      </div>
+    `).join('') || '<div class="empty-state" style="padding:20px;">No custom categories found.</div>';
+    document.getElementById('categoryModal').classList.add('open');
+  }
+
+  window.createCategory = async function() {
+    const el = document.getElementById('newCatInput');
+    const name = el.value.trim();
+    if (!name) return;
+    const id = name.toLowerCase().replace(/\s+/g, '-');
+    if (window.categories.find(c => c.id === id)) { showToast('⚠️', 'Category already exists!'); return; }
+    
+    showToast('🔄', `Creating "${name}"...`);
+    const { doc, setDoc } = window._fs;
+    await setDoc(doc(window._db, 'categories', id), { name });
+    el.value = '';
+    showToast('✅', `Category "${name}" created!`);
+    openCategoryModal(); // Refresh modal list
+  }
+
+  window.promptRenameCategory = async function(id, oldName) {
+    const newName = prompt(`Rename category "${oldName}" to:`, oldName);
+    if (!newName || newName === oldName) return;
+    
+    showToast('🔄', `Renaming to "${newName}"...`);
+    const { doc, setDoc } = window._fs;
+    
+    // 1. Update Category Name
+    await setDoc(doc(window._db, 'categories', id), { name: newName });
+    
+    // 2. Update linked items (optional sync, but good for data integrity)
+    const itemsToUpdate = window.menuItems.filter(i => i.cat === id);
+    for (const item of itemsToUpdate) {
+      await setDoc(doc(window._db, 'menuItems', item.id), { ...item }); // no change to ID needed now
+    }
+    showToast('✅', `Category renamed to "${newName}"!`);
+    openCategoryModal();
+  }
+
+  window.confirmDeleteCategory = function(id) {
+    pendingDeleteId = id;
+    pendingDeleteType = 'category';
+    document.getElementById('delTitle').textContent = 'Delete Category?';
+    document.getElementById('delMsg').textContent = 'All items in this category will be moved to "Other". The category itself will be removed.';
+    document.getElementById('deleteModal').classList.add('open');
+  }
+
+  window.executeDeleteCategory = async function() {
+    const id = pendingDeleteId;
+    if (!id) return;
+    
+    closeModal('deleteModal');
+    showToast('🗑️', `Deleting category...`);
+    
+    const { doc, deleteDoc, setDoc } = window._fs;
+    
+    // 1. Delete Category
+    await deleteDoc(doc(window._db, 'categories', id));
+    
+    // 2. Move items to 'other'
+    const itemsToUpdate = window.menuItems.filter(i => i.cat === id);
+    for (const item of itemsToUpdate) {
+      await setDoc(doc(window._db, 'menuItems', item.id), { ...item, cat: 'other' });
+    }
+    showToast('✅', `Category deleted!`);
+    openCategoryModal();
+  }
+
+  function subscribeToContacts() {
+    if (contactsUnsubscribe) contactsUnsubscribe();
+    contactsUnsubscribe = onSnapshot(collection(dbInstance, 'contacts'), snap => {
+      const contacts = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => (b.ts||0)-(a.ts||0));
+      if (typeof renderOrdersTable === 'function') renderOrdersTable(contacts);
+      const el = document.getElementById('statInquiries');
+      const sub = document.getElementById('statInquiriesSub');
+      if (el) el.textContent = snap.size;
+      if (sub) {
+        const pendingCount = contacts.filter(c => c.status === 'pending').length;
+        sub.textContent = pendingCount + ' Pending';
+      }
+    });
+  }
+
+  window.toggleStatusMenu = function(id, e) {
+    if (e) e.stopPropagation();
+    // Close other open popovers
+    document.querySelectorAll('.status-popover').forEach(p => {
+      if (p.id !== 'pop-'+id) p.classList.remove('open');
+    });
+    const pop = document.getElementById('pop-'+id);
+    if (pop) pop.classList.toggle('open');
+  }
+
+  window.updateAndCloseStatus = async function(id, status) {
+    document.querySelectorAll('.status-popover').forEach(p => p.classList.remove('open'));
+    await updateContactStatus(id, status);
+  }
+
+  // Global click outside to close popovers
+  document.addEventListener('click', () => {
+    document.querySelectorAll('.status-popover').forEach(p => p.classList.remove('open'));
+  });
+
+  window.updateContactStatus = async function(id, newStatus) {
+    if (!id) return;
+    const { doc, setDoc } = window._fs;
+    showToast('🔄', `Updating status...`);
+    try {
+      await setDoc(doc(window._db, 'contacts', id), { status: newStatus }, { merge: true });
+      showToast('✅', `Status updated to ${newStatus}!`);
+    } catch(e) {
+      showToast('❌', 'Update failed.');
+    }
+  }
+
+  function subscribeToAnalytics() {
+    if (analyticsUnsubscribe) analyticsUnsubscribe();
+    analyticsUnsubscribe = onSnapshot(collection(dbInstance, 'analytics'), snap => {
+      window.analyticsData = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => a.id.localeCompare(b.id));
+      if (typeof renderAnalyticsChart === 'function') renderAnalyticsChart();
+    });
+  }
+
+  function subscribeToPresence() {
+    if (presenceUnsubscribe) presenceUnsubscribe();
+    presenceUnsubscribe = onSnapshot(collection(dbInstance, 'presence'), snap => {
+      const now = Date.now(), timeout = 60000;
+      const activeDocs = snap.docs.filter(d => d.data().lastSeen && (now - d.data().lastSeen < timeout));
+      const el = document.getElementById('statOnline');
+      if (el) el.textContent = activeDocs.length;
+      snap.docs.forEach(async d => { if (now - d.data().lastSeen > 600000) { try { await deleteDoc(d.ref); } catch(e){} } });
+    });
+  }
+
+  function loadSettingsFromCloud() {
+    // Restaurant Info
+    onSnapshot(doc(dbInstance, 'settings', 'restaurantInfo'), snap => {
+      const c = snap.data() || {};
+      const fields = { sName:'name', sPhone:'phone', sAddress:'address' };
+      for (let id in fields) { const el = document.getElementById(id); if (el && c[fields[id]]) el.value = c[fields[id]]; }
+    });
+    // Stats
+    onSnapshot(doc(dbInstance, 'settings', 'stats'), snap => {
+      const s = snap.data() || {};
+      const fields = { statCustInput:'customers', statYearsInput:'years', statRatingInput:'rating' };
+      for (let id in fields) { const el = document.getElementById(id); if (el && s[fields[id]]) el.value = s[fields[id]]; }
+      const r = document.getElementById('statRating'); if (r && s.rating) r.textContent = s.rating;
+    });
+    // Toggles
+    onSnapshot(doc(dbInstance, 'settings', 'toggles'), snap => {
+      window._toggles = snap.data() || { intro:true, whatsapp:true, cursor:true, reviews:true, contact:true };
+      for (const key in window._toggles) {
+        const btn = document.querySelector(`.toggle[data-feature="${key}"]`);
+        if (btn) btn.classList.toggle('on', !!window._toggles[key]);
+      }
+    });
+  }
+
+  window.updateToggleState = async function(key, el) {
+    if (window._isUpdatingToggle) return;
+    window._isUpdatingToggle = true;
+
+    // Show visual feedback (semi-transparent) while saving
+    el.style.opacity = '0.5';
+    el.style.pointerEvents = 'none';
+
+    const newState = !el.classList.contains('on');
+    const { doc, setDoc } = window._fs;
+    const toggles = { ...(window._toggles || {}) };
+    toggles[key] = newState;
+    
+    try {
+      await setDoc(doc(window._db, 'settings', 'toggles'), toggles, { merge: true });
+      showToast('⚙️', `${key.charAt(0).toUpperCase() + key.slice(1)} ${newState ? 'Enabled' : 'Disabled'}`);
+    } catch(e) {
+      showToast('❌', 'Failed to update toggle.');
+    } finally {
+      el.style.opacity = '1';
+      el.style.pointerEvents = 'auto';
+      window._isUpdatingToggle = false;
+    }
+  }
+
+  // AUTO-START ON REFRESH
+  if (sessionStorage.getItem('me_admin_auth') === 'true') {
+    if (typeof showAdmin === 'function') showAdmin();
+  }
 </script>
 </body>
 </html>
